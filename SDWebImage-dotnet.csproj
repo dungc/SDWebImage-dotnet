@@ -7,11 +7,11 @@
         <IsBindingProject>true</IsBindingProject>
 
         <!-- Nuget package -->
-        <PackageId>com.jonathanantoine.SDWebImage</PackageId>
+        <PackageId>com.pasasoft.SDWebImage</PackageId>
         <Version>5.21.0.6</Version>
-        <Authors>Jonathan Antoine</Authors>
+        <Authors>Jack pasa</Authors>
         <Title>SDWebImage for dotnet</Title>
-        <PackageProjectUrl>https://github.com/jonathanantoine/SDWebImage-dotnet</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/dungc/SDWebImage-dotnet</PackageProjectUrl>
         <Description>SDWebImage binding for Net 8.0 iOS</Description>
         <PackageReleaseNotes>SDWebImage binding for Net 8.0 iOS</PackageReleaseNotes>
         <PackageTags>maui ios SDWebImage dotnet</PackageTags>
