@@ -4,7 +4,7 @@
 
 - Native library repository: [SDWebImage](https://github.com/SDWebImage/SDWebImage)
 
-**Support Net 9.0 for iOS (works with Xcode 15 and iOS 17)**
+**Support Net 8.0 for iOS (works with Xcode 15 and iOS 17)**
 
 ## Nuget
 
