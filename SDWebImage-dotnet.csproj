@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0-ios</TargetFramework>
+        <TargetFramework>net8.0-ios</TargetFramework>
         <RootNamespace>SDWebImage</RootNamespace>
         <Nullable>enable</Nullable>
         <ImplicitUsings>true</ImplicitUsings>
@@ -12,8 +12,8 @@
         <Authors>Jonathan Antoine</Authors>
         <Title>SDWebImage for dotnet</Title>
         <PackageProjectUrl>https://github.com/jonathanantoine/SDWebImage-dotnet</PackageProjectUrl>
-        <Description>SDWebImage binding for Net 9.0 iOS</Description>
-        <PackageReleaseNotes>SDWebImage binding for Net 9.0 iOS</PackageReleaseNotes>
+        <Description>SDWebImage binding for Net 8.0 iOS</Description>
+        <PackageReleaseNotes>SDWebImage binding for Net 8.0 iOS</PackageReleaseNotes>
         <PackageTags>maui ios SDWebImage dotnet</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
 
