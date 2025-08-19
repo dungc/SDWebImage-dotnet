@@ -8,7 +8,7 @@
 
         <!-- Nuget package -->
         <PackageId>com.pasasoft.SDWebImage</PackageId>
-        <Version>5.21.0.6</Version>
+        <Version>5.21.0.7</Version>
         <Authors>Jack pasa</Authors>
         <Title>SDWebImage for dotnet</Title>
         <PackageProjectUrl>https://github.com/dungc/SDWebImage-dotnet</PackageProjectUrl>
