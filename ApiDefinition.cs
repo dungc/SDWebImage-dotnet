@@ -6,26 +6,14 @@ using UIKit;
 
 namespace SDWebImage {
     
-
+    
     // typedef void (^SDExternalCompletionBlock)(UIImage * _Nullable, NSError * _Nullable, SDImageCacheType, NSURL * _Nullable);
     delegate void SDExternalCompletionHandler ([NullAllowed] UIImage image, [NullAllowed] NSError error, SDImageCacheType cacheType, [NullAllowed] NSUrl imageUrl);
-
-    // typedef void (^SDImageLoaderProgressBlock)(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL);
-    delegate void SDImageLoaderProgressHandler (nint receivedSize, nint expectedSize, [NullAllowed] NSUrl targetUrl);
-
-    // typedef void (^SDInternalCompletionBlock)(UIImage * _Nullable, NSData * _Nullable, NSError * _Nullable, SDImageCacheType, BOOL, NSURL * _Nullable);
-    delegate void SDInternalCompletionHandler ([NullAllowed] UIImage image, [NullAllowed] NSData data, [NullAllowed] NSError error, SDImageCacheType cacheType, bool finished, [NullAllowed] NSUrl imageUrl);
 
     
 	[Category]
 	[BaseType (typeof (UIImageView))]
 	interface UIImageView_WebCache {
-        
-        // @property (nonatomic, strong, readonly, nullable) NSURL *sd_currentImageURL;
-        [Export ("sd_currentImageURL")]
-        [NullAllowed]
-        NSUrl CurrentImageUrl { get; }
-
 		// -(void)sd_setImageWithURL:(NSURL * _Nullable)url;
 		[Export ("sd_setImageWithURL:")]
 		void SetImage ([NullAllowed] NSUrl url);
@@ -38,33 +26,13 @@ namespace SDWebImage {
         [Export ("sd_setImageWithURL:placeholderImage:options:")]
         void SetImage ([NullAllowed] NSUrl url, [NullAllowed] UIImage placeholder, SDWebImageOptions options);
 
-        // -(void)sd_setImageWithURL:(NSURL * _Nullable)url placeholderImage:(UIImage * _Nullable)placeholder options:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context;
-        [Export ("sd_setImageWithURL:placeholderImage:options:context:")]
-        void SetImage ([NullAllowed] NSUrl url, [NullAllowed] UIImage placeholder, SDWebImageOptions options, [NullAllowed] NSDictionary context);
-
         // -(void)sd_setImageWithURL:(NSURL * _Nullable)url completed:(SDExternalCompletionBlock _Nullable)completedBlock;
         [Export ("sd_setImageWithURL:completed:")]
         void SetImage ([NullAllowed] NSUrl url, [NullAllowed] SDExternalCompletionHandler completedHandler);
         
-        // -(void)sd_setImageWithURL:(NSURL * _Nullable)url placeholderImage:(UIImage * _Nullable)placeholder completed:(SDExternalCompletionBlock _Nullable)completedBlock;
-        [Export ("sd_setImageWithURL:placeholderImage:completed:")]
-        void SetImage ([NullAllowed] NSUrl url, [NullAllowed] UIImage placeholder, [NullAllowed] SDExternalCompletionHandler completedHandler);
-
         // -(void)sd_setImageWithURL:(NSURL * _Nullable)url placeholderImage:(UIImage * _Nullable)placeholder options:(SDWebImageOptions)options completed:(SDExternalCompletionBlock _Nullable)completedBlock;
         [Export ("sd_setImageWithURL:placeholderImage:options:completed:")]
         void SetImage ([NullAllowed] NSUrl url, [NullAllowed] UIImage placeholder, SDWebImageOptions options, [NullAllowed] SDExternalCompletionHandler completedHandler);
-
-        // -(void)sd_setImageWithURL:(NSURL * _Nullable)url placeholderImage:(UIImage * _Nullable)placeholder options:(SDWebImageOptions)options progress:(nullable SDImageLoaderProgressBlock)progressBlock completed:(nullable SDExternalCompletionBlock)completedBlock;
-        [Export ("sd_setImageWithURL:placeholderImage:options:progress:completed:")]
-        void SetImage ([NullAllowed] NSUrl url, [NullAllowed] UIImage placeholder, SDWebImageOptions options, [NullAllowed] SDImageLoaderProgressHandler progressHandler, [NullAllowed] SDExternalCompletionHandler completedHandler);
-
-        // -(void)sd_setImageWithURL:(NSURL * _Nullable)url placeholderImage:(UIImage * _Nullable)placeholder options:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context progress:(nullable SDImageLoaderProgressBlock)progressBlock completed:(nullable SDExternalCompletionBlock)completedBlock;
-        [Export ("sd_setImageWithURL:placeholderImage:options:context:progress:completed:")]
-        void SetImage ([NullAllowed] NSUrl url, [NullAllowed] UIImage placeholder, SDWebImageOptions options, [NullAllowed] NSDictionary context, [NullAllowed] SDImageLoaderProgressHandler progressHandler, [NullAllowed] SDExternalCompletionHandler completedHandler);
-
-        // -(void)sd_cancelCurrentImageLoad;
-        [Export ("sd_cancelCurrentImageLoad")]
-        void CancelCurrentImageLoad ();
 	}
     
     
@@ -73,6 +41,7 @@ namespace SDWebImage {
     [BaseType(typeof(UIView))]
     interface UIView_WebCache
     {
+
         // -(void)sd_cancelCurrentImageLoad;
         [Export("sd_cancelCurrentImageLoad")]
         void CancelCurrentImageLoad();
@@ -87,115 +56,90 @@ namespace SDWebImage {
         // @optional -(BOOL)imageManager:(SDWebImageManager *)imageManager shouldDownloadImageForURL:(NSURL *)imageURL;
         [Export ("imageManager:shouldDownloadImageForURL:")]
         bool ShouldDownloadImageForURL (SDWebImageManager imageManager, NSUrl imageURL);
-
-        // @optional -(BOOL)imageManager:(nonnull SDWebImageManager *)imageManager shouldBlockFailedURL:(nonnull NSURL *)imageURL withError:(nonnull NSError *)error;
-        [Export ("imageManager:shouldBlockFailedURL:withError:")]
-        bool ShouldBlockFailedUrl (SDWebImageManager imageManager, NSUrl imageUrl, NSError error);
-    }
-
-    // @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
-    [BaseType (typeof (NSObject))]
-    interface SDWebImageCombinedOperation : SDWebImageOperation {
-
-        // @property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
-        [Export ("cancelled")]
-        bool IsCancelled { [Bind ("isCancelled")] get; }
-
-        // @property (strong, nonatomic, nullable, readonly) id<SDWebImageOperation> cacheOperation;
-        [Export ("cacheOperation")]
-        [NullAllowed]
-        SDWebImageOperation CacheOperation { get; }
-
-        // @property (strong, nonatomic, nullable, readonly) id<SDWebImageOperation> loaderOperation;
-        [Export ("loaderOperation")]
-        [NullAllowed]
-        SDWebImageOperation LoaderOperation { get; }
+    
+        // @optional -(UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL;
+        [Export ("imageManager:transformDownloadedImage:withURL:")]
+        UIImage TransformDownloadedImage (SDWebImageManager imageManager, UIImage image, NSUrl imageURL);
     }
     
-    // @interface SDWebImageDownloadToken : NSObject <SDWebImageOperation>
-    [BaseType (typeof (NSObject))]
-    interface SDWebImageDownloadToken : SDWebImageOperation {
-
-        // @property (nonatomic, strong, nullable, readonly) NSURL *url;
-        [Export ("url")]
-        [NullAllowed]
-        NSUrl Url { get; }
-
-        // @property (nonatomic, strong, nullable, readonly) NSURLRequest *request;
-        [Export ("request")]
-        [NullAllowed]
-        NSUrlRequest Request { get; }
-
-        // @property (nonatomic, strong, nullable, readonly) NSURLResponse *response;
-        [Export ("response")]
-        [NullAllowed]
-        NSUrlResponse Response { get; }
-    }
-
-    // @interface SDWebImageDownloader : NSObject
+    	// @interface SDWebImageDownloader : NSObject
 	[BaseType (typeof (NSObject))]
 	interface SDWebImageDownloader {
 	
-        // @property (nonatomic, copy, readonly, nonnull) SDWebImageDownloaderConfig *config;
-        [Export ("config", ArgumentSemantic.Copy)]
-        NSObject Config { get; }
-
-        // @property (nonatomic, assign, getter=isSuspended) BOOL suspended;
-        [Export ("suspended")]
-        bool IsSuspended { [Bind ("isSuspended")] get; set; }
-
-        // @property (nonatomic, assign, readonly) NSUInteger currentDownloadCount;
-        [Export ("currentDownloadCount")]
-        nuint CurrentDownloadCount { get; }
-
-        // @property (nonatomic, readonly, nonnull) NSURLSessionConfiguration *sessionConfiguration;
-        [Export ("sessionConfiguration")]
-        NSUrlSessionConfiguration SessionConfiguration { get; }
-
-        // @property (nonatomic, class, readonly, nonnull) SDWebImageDownloader *sharedDownloader;
-        [Static, Export ("sharedDownloader")]
-        SDWebImageDownloader SharedDownloader { get; }
-
-        // -(nonnull instancetype)initWithConfig:(nullable SDWebImageDownloaderConfig *)config;
-        [Export ("initWithConfig:")]
-        [DesignatedInitializer]
-        IntPtr Constructor ([NullAllowed] NSObject config);
-
-        // -(void)setValue:(nullable NSString *)value forHTTPHeaderField:(nullable NSString *)field;
-        [Export ("setValue:forHTTPHeaderField:")]
-        void SetValue ([NullAllowed] string value, [NullAllowed] string field);
-
-        // -(nullable NSString *)valueForHTTPHeaderField:(nullable NSString *)field;
-        [Export ("valueForHTTPHeaderField:")]
-        [return: NullAllowed]
-        string ValueForHTTPHeaderField ([NullAllowed] string field);
-
-        // -(nullable SDWebImageDownloadToken *)downloadImageWithURL:(nullable NSURL *)url completed:(nullable SDWebImageDownloaderCompletedBlock)completedBlock;
-        [Export ("downloadImageWithURL:completed:")]
-        [return: NullAllowed]
-        SDWebImageDownloadToken DownloadImageWithURL ([NullAllowed] NSUrl url, [NullAllowed] Action<UIImage, NSData, NSError, bool> completedBlock);
-
-        // -(nullable SDWebImageDownloadToken *)downloadImageWithURL:(nullable NSURL *)url options:(SDWebImageDownloaderOptions)options progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock completed:(nullable SDWebImageDownloaderCompletedBlock)completedBlock;
-        [Export ("downloadImageWithURL:options:progress:completed:")]
-        [return: NullAllowed]
-        SDWebImageDownloadToken DownloadImageWithURL ([NullAllowed] NSUrl url, SDWebImageDownloaderOptions options, [NullAllowed] SDImageLoaderProgressHandler progressBlock, [NullAllowed] Action<UIImage, NSData, NSError, bool> completedBlock);
-
-        // -(nullable SDWebImageDownloadToken *)downloadImageWithURL:(nullable NSURL *)url options:(SDWebImageDownloaderOptions)options context:(nullable SDWebImageContext *)context progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock completed:(nullable SDWebImageDownloaderCompletedBlock)completedBlock;
-        [Export ("downloadImageWithURL:options:context:progress:completed:")]
-        [return: NullAllowed]
-        SDWebImageDownloadToken DownloadImageWithURL ([NullAllowed] NSUrl url, SDWebImageDownloaderOptions options, [NullAllowed] NSDictionary context, [NullAllowed] SDImageLoaderProgressHandler progressBlock, [NullAllowed] Action<UIImage, NSData, NSError, bool> completedBlock);
-
-        // -(void)cancelAllDownloads;
-        [Export ("cancelAllDownloads")]
-        void CancelAllDownloads ();
-
-        // -(void)invalidateSessionAndCancel:(BOOL)cancelPendingOperations;
-        [Export ("invalidateSessionAndCancel:")]
-        void InvalidateSessionAndCancel (bool cancelPendingOperations);
+		// @property (assign, nonatomic) NSInteger maxConcurrentDownloads;
+		[Export ("maxConcurrentDownloads", ArgumentSemantic.UnsafeUnretained)]
+		nint MaxConcurrentDownloads { get; set; }
+	
+		// @property (readonly, nonatomic) NSUInteger currentDownloadCount;
+		[Export ("currentDownloadCount")]
+		nuint CurrentDownloadCount { get; }
+	
+		// @property (assign, nonatomic) NSTimeInterval downloadTimeout;
+		[Export ("downloadTimeout", ArgumentSemantic.UnsafeUnretained)]
+		double DownloadTimeout { get; set; }
+	
+		// @property (assign, nonatomic) SDWebImageDownloaderExecutionOrder executionOrder;
+		[Export ("executionOrder", ArgumentSemantic.UnsafeUnretained)]
+		SDWebImageDownloaderExecutionOrder ExecutionOrder { get; set; }
+	
+		// @property (nonatomic, strong) NSString * username;
+		[Export ("username", ArgumentSemantic.Retain)]
+		string Username { get; set; }
+	
+		// @property (nonatomic, strong) NSString * password;
+		[Export ("password", ArgumentSemantic.Retain)]
+		string Password { get; set; }
+	
+		// @property (copy, nonatomic) SDWebImageDownloaderHeadersFilterBlock headersFilter;
+		[Export ("headersFilter", ArgumentSemantic.Copy)]
+		Func<NSUrl, NSDictionary, NSDictionary> HeadersFilter { get; set; }
+	
+		// +(SDWebImageDownloader *)sharedDownloader;
+		[Static, Export ("sharedDownloader")]
+		SDWebImageDownloader SharedDownloader ();
+	
+		// -(void)setValue:(NSString *)value forHTTPHeaderField:(NSString *)field;
+		[Export ("setValue:forHTTPHeaderField:")]
+		void SetValue (string value, string field);
+	
+		// -(NSString *)valueForHTTPHeaderField:(NSString *)field;
+		[Export ("valueForHTTPHeaderField:")]
+		string ValueForHTTPHeaderField (string field);
+	
+		// -(id<SDWebImageOperation>)downloadImageWithURL:(NSURL *)url options:(SDWebImageDownloaderOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageDownloaderCompletedBlock)completedBlock;
+		[Export ("downloadImageWithURL:options:progress:completed:")]
+		SDWebImageOperation DownloadImageWithURL (NSUrl url, SDWebImageDownloaderOptions options, Action<int, int> progressBlock, Action<UIImage, NSData, NSError, sbyte> completedBlock);
+	
+		// -(void)setSuspended:(BOOL)suspended;
+		[Export ("setSuspended:")]
+		void SetSuspended (bool suspended);
 	}
 
-	// SDWebImageDownloaderOperation - 这个类在最新版本中已被移除，删除此定义
-
+	// @interface SDWebImageDownloaderOperation : NSOperation <SDWebImageOperation>
+	[BaseType (typeof (NSOperation))]
+	interface SDWebImageDownloaderOperation : SDWebImageOperation {
+	
+		// -(id)initWithRequest:(NSURLRequest *)request options:(SDWebImageDownloaderOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageDownloaderCompletedBlock)completedBlock cancelled:(SDWebImageNoParamsBlock)cancelBlock;
+		[Export ("initWithRequest:options:progress:completed:cancelled:")]
+		IntPtr Constructor (NSUrlRequest request, SDWebImageDownloaderOptions options, Action<int, int> progressBlock, Action<UIImage, NSData, NSError, sbyte> completedBlock, Action cancelBlock);
+	
+		// @property (readonly, nonatomic, strong) NSURLRequest * request;
+		[Export ("request", ArgumentSemantic.Retain)]
+		NSUrlRequest Request { get; }
+	
+		// @property (assign, nonatomic) BOOL shouldUseCredentialStorage;
+		[Export ("shouldUseCredentialStorage", ArgumentSemantic.UnsafeUnretained)]
+		bool ShouldUseCredentialStorage { get; set; }
+	
+		// @property (nonatomic, strong) NSURLCredential * credential;
+		[Export ("credential", ArgumentSemantic.Retain)]
+		NSUrlCredential Credential { get; set; }
+	
+		// @property (readonly, assign, nonatomic) SDWebImageDownloaderOptions options;
+		[Export ("options", ArgumentSemantic.UnsafeUnretained)]
+		SDWebImageDownloaderOptions Options { get; }
+	}
+    
     // @protocol SDWebImageOperation <NSObject>
     [Protocol, Model]
     [BaseType (typeof (NSObject))]
@@ -211,256 +155,173 @@ namespace SDWebImage {
 	[BaseType (typeof (NSObject))]
 	interface SDWebImageManager {
  
-		// @property (weak, nonatomic, nullable) id <SDWebImageManagerDelegate> delegate;
+		// @property (nonatomic, weak) id<SDWebImageManagerDelegate> delegate;
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
  
-		// @property (weak, nonatomic, nullable) id <SDWebImageManagerDelegate> delegate;
+		// @property (nonatomic, weak) id<SDWebImageManagerDelegate> delegate;
 		[Wrap ("WeakDelegate")]
 		SDWebImageManagerDelegate Delegate { get; set; }
  
-		// @property (strong, nonatomic, readonly, nonnull) id<SDImageCache> imageCache;
-		[Export ("imageCache")]
-		NSObject ImageCache { get; }
+		// @property (readonly, nonatomic, strong) SDImageCache * imageCache;
+		[Export ("imageCache", ArgumentSemantic.Retain)]
+		SDImageCache ImageCache { get; }
  
-		// @property (strong, nonatomic, readonly, nonnull) id<SDImageLoader> imageLoader;
-		[Export ("imageLoader")]
-		NSObject ImageLoader { get; }
-
-        // @property (strong, nonatomic, nullable) id<SDImageTransformer> transformer;
-        [Export ("transformer", ArgumentSemantic.Strong)]
-        [NullAllowed]
-        NSObject Transformer { get; set; }
-
-        // @property (nonatomic, strong, nullable) id<SDWebImageCacheKeyFilter> cacheKeyFilter;
-        [Export ("cacheKeyFilter", ArgumentSemantic.Strong)]
-        [NullAllowed]
-        NSObject CacheKeyFilter { get; set; }
-
-        // @property (nonatomic, strong, nullable) id<SDWebImageCacheSerializer> cacheSerializer;
-        [Export ("cacheSerializer", ArgumentSemantic.Strong)]
-        [NullAllowed]
-        NSObject CacheSerializer { get; set; }
-
-        // @property (nonatomic, strong, nullable) id<SDWebImageOptionsProcessor> optionsProcessor;
-        [Export ("optionsProcessor", ArgumentSemantic.Strong)]
-        [NullAllowed]
-        NSObject OptionsProcessor { get; set; }
-
-        // @property (nonatomic, assign, readonly, getter=isRunning) BOOL running;
-        [Export ("running")]
-        bool IsRunning { [Bind ("isRunning")] get; }
-
-        // @property (nonatomic, class, nullable) id<SDImageCache> defaultImageCache;
-        [Static]
-        [Export ("defaultImageCache")]
-        [NullAllowed]
-        NSObject DefaultImageCache { get; set; }
-
-        // @property (nonatomic, class, nullable) id<SDImageLoader> defaultImageLoader;
-        [Static]
-        [Export ("defaultImageLoader")]
-        [NullAllowed]
-        NSObject DefaultImageLoader { get; set; }
-
-        // @property (nonatomic, class, readonly, nonnull) SDWebImageManager *sharedManager;
-        [Static]
-        [Export ("sharedManager")]
-        SDWebImageManager SharedManager { get; }
-
-        // -(nonnull instancetype)initWithCache:(nonnull id<SDImageCache>)cache loader:(nonnull id<SDImageLoader>)loader;
-        [Export ("initWithCache:loader:")]
-        [DesignatedInitializer]
-        IntPtr Constructor (NSObject cache, NSObject loader);
-
-        // -(nullable SDWebImageCombinedOperation *)loadImageWithURL:(nullable NSURL *)url options:(SDWebImageOptions)options progress:(nullable SDImageLoaderProgressBlock)progressBlock completed:(nonnull SDInternalCompletionBlock)completedBlock;
-        [Export ("loadImageWithURL:options:progress:completed:")]
-        [return: NullAllowed]
-        SDWebImageCombinedOperation LoadImageWithURL ([NullAllowed] NSUrl url, SDWebImageOptions options, [NullAllowed] SDImageLoaderProgressHandler progressBlock, SDInternalCompletionHandler completedBlock);
-
-        // -(nullable SDWebImageCombinedOperation *)loadImageWithURL:(nullable NSURL *)url options:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context progress:(nullable SDImageLoaderProgressBlock)progressBlock completed:(nonnull SDInternalCompletionBlock)completedBlock;
-        [Export ("loadImageWithURL:options:context:progress:completed:")]
-        [return: NullAllowed]
-        SDWebImageCombinedOperation LoadImageWithURL ([NullAllowed] NSUrl url, SDWebImageOptions options, [NullAllowed] NSDictionary context, [NullAllowed] SDImageLoaderProgressHandler progressBlock, SDInternalCompletionHandler completedBlock);
-
-        // -(void)cancelAll;
-        [Export ("cancelAll")]
-        void CancelAll ();
-
-        // -(void)removeFailedURL:(nonnull NSURL *)url;
-        [Export ("removeFailedURL:")]
-        void RemoveFailedUrl (NSUrl url);
-
-        // -(void)removeAllFailedURLs;
-        [Export ("removeAllFailedURLs")]
-        void RemoveAllFailedUrls ();
-
-        // -(nullable NSString *)cacheKeyForURL:(nullable NSURL *)url;
-        [Export ("cacheKeyForURL:")]
-        [return: NullAllowed]
-        string CacheKeyForURL ([NullAllowed] NSUrl url);
-
-        // -(nullable NSString *)cacheKeyForURL:(nullable NSURL *)url context:(nullable SDWebImageContext *)context;
-        [Export ("cacheKeyForURL:context:")]
-        [return: NullAllowed]
-        string CacheKeyForURL ([NullAllowed] NSUrl url, [NullAllowed] NSDictionary context);
+		// @property (readonly, nonatomic, strong) SDWebImageDownloader * imageDownloader;
+		[Export ("imageDownloader", ArgumentSemantic.Retain)]
+		SDWebImageDownloader ImageDownloader { get; }
+ 
+		// @property (copy) SDWebImageCacheKeyFilterBlock cacheKeyFilter;
+		[Export ("cacheKeyFilter", ArgumentSemantic.Copy)]
+		Func<NSUrl, NSString> CacheKeyFilter { get; set; }
+ 
+		// +(SDWebImageManager *)sharedManager;
+		[Static, Export ("sharedManager")]
+		SDWebImageManager SharedManager ();
+ 
+		// -(id<SDWebImageOperation>)downloadImageWithURL:(NSURL *)url options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletionWithFinishedBlock)completedBlock;
+		[Export ("downloadImageWithURL:options:progress:completed:")]
+		SDWebImageOperation DownloadImageWithURL (NSUrl url, SDWebImageOptions options, Action<int, int> progressBlock, Action<UIImage, NSError, SDImageCacheType, sbyte, NSUrl> completedBlock);
+ 
+		// -(void)saveImageToCache:(UIImage *)image forURL:(NSURL *)url;
+		[Export ("saveImageToCache:forURL:")]
+		void SaveImageToCache (UIImage image, NSUrl url);
+ 
+		// -(void)cancelAll;
+		[Export ("cancelAll")]
+		void CancelAll ();
+ 
+		// -(BOOL)isRunning;
+		[Export ("isRunning")]
+		bool IsRunning ();
+ 
+		// -(BOOL)cachedImageExistsForURL:(NSURL *)url;
+		[Export ("cachedImageExistsForURL:")]
+		bool CachedImageExistsForURL (NSUrl url);
+ 
+		// -(BOOL)diskImageExistsForURL:(NSURL *)url;
+		[Export ("diskImageExistsForURL:")]
+		bool DiskImageExistsForURL (NSUrl url);
+ 
+		// -(void)cachedImageExistsForURL:(NSURL *)url completion:(SDWebImageCheckCacheCompletionBlock)completionBlock;
+		[Export ("cachedImageExistsForURL:completion:")]
+		void CachedImageExistsForURL (NSUrl url, Action<sbyte> completionBlock);
+ 
+		// -(void)diskImageExistsForURL:(NSURL *)url completion:(SDWebImageCheckCacheCompletionBlock)completionBlock;
+		[Export ("diskImageExistsForURL:completion:")]
+		void DiskImageExistsForURL (NSUrl url, Action<sbyte> completionBlock);
+ 
+		// -(NSString *)cacheKeyForURL:(NSURL *)url;
+		[Export ("cacheKeyForURL:")]
+		string CacheKeyForURL (NSUrl url);
 	}
-
-    // @interface SDImageCacheToken : NSObject <SDWebImageOperation>
-    [BaseType (typeof (NSObject))]
-    interface SDImageCacheToken : SDWebImageOperation {
-
-        // @property (nonatomic, strong, nullable, readonly) NSString *key;
-        [Export ("key")]
-        [NullAllowed]
-        string Key { get; }
-    }
  
     // @interface SDImageCache : NSObject
 	[BaseType (typeof (NSObject))]
 	interface SDImageCache {
-
-        // @property (nonatomic, copy, nonnull, readonly) SDImageCacheConfig *config;
-        [Export ("config", ArgumentSemantic.Copy)]
-        NSObject Config { get; }
-
-        // @property (nonatomic, strong, readonly, nonnull) id<SDMemoryCache> memoryCache;
-        [Export ("memoryCache")]
-        NSObject MemoryCache { get; }
-
-        // @property (nonatomic, strong, readonly, nonnull) id<SDDiskCache> diskCache;
-        [Export ("diskCache")]
-        NSObject DiskCache { get; }
-
-        // @property (nonatomic, copy, nonnull, readonly) NSString *diskCachePath;
-        [Export ("diskCachePath")]
-        string DiskCachePath { get; }
-
-        // @property (nonatomic, class, readonly, nonnull) SDImageCache *sharedImageCache;
-        [Static]
-        [Export ("sharedImageCache")]
-        SDImageCache SharedImageCache { get; }
-
-        // @property (nonatomic, class, readwrite, null_resettable) NSString *defaultDiskCacheDirectory;
-        [Static]
-        [Export ("defaultDiskCacheDirectory")]
-        [NullAllowed]
-        string DefaultDiskCacheDirectory { get; set; }
-
-        // -(nonnull instancetype)initWithNamespace:(nonnull NSString *)ns;
-        [Export ("initWithNamespace:")]
-        IntPtr Constructor (string ns);
-
-        // -(nonnull instancetype)initWithNamespace:(nonnull NSString *)ns diskCacheDirectory:(nullable NSString *)directory;
-        [Export ("initWithNamespace:diskCacheDirectory:")]
-        IntPtr Constructor (string ns, [NullAllowed] string directory);
-
-        // -(nonnull instancetype)initWithNamespace:(nonnull NSString *)ns diskCacheDirectory:(nullable NSString *)directory config:(nullable SDImageCacheConfig *)config;
-        [Export ("initWithNamespace:diskCacheDirectory:config:")]
-        [DesignatedInitializer]
-        IntPtr Constructor (string ns, [NullAllowed] string directory, [NullAllowed] NSObject config);
-
-        // -(nullable NSString *)cachePathForKey:(nullable NSString *)key;
+ 
+		// -(id)initWithNamespace:(NSString *)ns;
+		[Export ("initWithNamespace:")]
+		IntPtr Constructor (string ns);
+ 
+		// @property (assign, nonatomic) NSUInteger maxMemoryCost;
+		[Export ("maxMemoryCost", ArgumentSemantic.UnsafeUnretained)]
+		nuint MaxMemoryCost { get; set; }
+ 
+		// @property (assign, nonatomic) NSInteger maxCacheAge;
+		[Export ("maxCacheAge", ArgumentSemantic.UnsafeUnretained)]
+		nint MaxCacheAge { get; set; }
+ 
+		// @property (assign, nonatomic) NSUInteger maxCacheSize;
+		[Export ("maxCacheSize", ArgumentSemantic.UnsafeUnretained)]
+		nuint MaxCacheSize { get; set; }
+ 
+		// +(SDImageCache *)sharedImageCache;
+		[Static, Export ("sharedImageCache")]
+		SDImageCache SharedImageCache ();
+ 
+		// -(void)addReadOnlyCachePath:(NSString *)path;
+		[Export ("addReadOnlyCachePath:")]
+		void AddReadOnlyCachePath (string path);
+ 
+		// -(void)storeImage:(UIImage *)image forKey:(NSString *)key;
+		[Export ("storeImage:forKey:")]
+		void StoreImage (UIImage image, string key);
+ 
+		// -(void)storeImage:(UIImage *)image forKey:(NSString *)key toDisk:(BOOL)toDisk;
+		[Export ("storeImage:forKey:toDisk:")]
+		void StoreImage (UIImage image, string key, bool toDisk);
+ 
+		// -(void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk;
+		[Export ("storeImage:recalculateFromImage:imageData:forKey:toDisk:")]
+		void StoreImage (UIImage image, bool recalculate, NSData imageData, string key, bool toDisk);
+ 
+		// -(NSOperation *)queryDiskCacheForKey:(NSString *)key done:(SDWebImageQueryCompletedBlock)doneBlock;
+		[Export ("queryDiskCacheForKey:done:")]
+		NSOperation QueryDiskCacheForKey (string key, Action<UIImage, SDImageCacheType> doneBlock);
+ 
+		// -(UIImage *)imageFromMemoryCacheForKey:(NSString *)key;
+		[Export ("imageFromMemoryCacheForKey:")]
+		UIImage ImageFromMemoryCacheForKey (string key);
+ 
+		// -(UIImage *)imageFromDiskCacheForKey:(NSString *)key;
+		[Export ("imageFromDiskCacheForKey:")]
+		UIImage ImageFromDiskCacheForKey (string key);
+ 
+		// -(void)removeImageForKey:(NSString *)key;
+		[Export ("removeImageForKey:")]
+		void RemoveImageForKey (string key);
+ 
+		// -(void)removeImageForKey:(NSString *)key withCompletion:(SDWebImageNoParamsBlock)completion;
+		[Export ("removeImageForKey:withCompletion:")]
+		void RemoveImageForKey (string key, Action completion);
+ 
+		// -(void)removeImageForKey:(NSString *)key fromDisk:(BOOL)fromDisk;
+		[Export ("removeImageForKey:fromDisk:")]
+		void RemoveImageForKey (string key, bool fromDisk);
+ 
+		// -(void)removeImageForKey:(NSString *)key fromDisk:(BOOL)fromDisk withCompletion:(SDWebImageNoParamsBlock)completion;
+		[Export ("removeImageForKey:fromDisk:withCompletion:")]
+		void RemoveImageForKey (string key, bool fromDisk, Action completion);
+ 
+		// -(void)clearMemory;
+		[Export ("clearMemory")]
+		void ClearMemory ();
+ 
+		// -(void)clearDiskOnCompletion:(SDWebImageNoParamsBlock)completion;
+		[Export ("clearDiskOnCompletion:")]
+		void ClearDiskOnCompletion (Action completion);
+ 
+		// -(void)clearDisk;
+		[Export ("clearDisk")]
+		void ClearDisk ();
+ 
+		// -(void)cleanDiskWithCompletionBlock:(SDWebImageNoParamsBlock)completionBlock;
+		[Export ("cleanDiskWithCompletionBlock:")]
+		void CleanDiskWithCompletionBlock (Action completionBlock);
+ 
+		// -(void)cleanDisk;
+		[Export ("cleanDisk")]
+		void CleanDisk ();
+ 
+		// -(NSUInteger)getSize;
+		[Export ("getSize")]
+		nuint GetSize ();
+ 
+		// -(NSUInteger)getDiskCount;
+		[Export ("getDiskCount")]
+		nuint GetDiskCount ();
+ 
+		// -(void)calculateSizeWithCompletionBlock:(SDWebImageCalculateSizeBlock)completionBlock;
+		[Export ("calculateSizeWithCompletionBlock:")]
+		void CalculateSizeWithCompletionBlock (Action<uint, uint> completionBlock);
+ 
+	      // -(nullable NSString *)cachePathForKey:(nullable NSString *)key;
         [Export ("cachePathForKey:")]
         [return: NullAllowed]
         string CachePathForKey ([NullAllowed] string key);
 
-        // -(void)storeImage:(nullable UIImage *)image forKey:(nullable NSString *)key completion:(nullable SDWebImageNoParamsBlock)completionBlock;
-        [Export ("storeImage:forKey:completion:")]
-        void StoreImage ([NullAllowed] UIImage image, [NullAllowed] string key, [NullAllowed] Action completionBlock);
 
-        // -(void)storeImage:(nullable UIImage *)image forKey:(nullable NSString *)key toDisk:(BOOL)toDisk completion:(nullable SDWebImageNoParamsBlock)completionBlock;
-        [Export ("storeImage:forKey:toDisk:completion:")]
-        void StoreImage ([NullAllowed] UIImage image, [NullAllowed] string key, bool toDisk, [NullAllowed] Action completionBlock);
-
-        // -(void)storeImageData:(nullable NSData *)imageData forKey:(nullable NSString *)key completion:(nullable SDWebImageNoParamsBlock)completionBlock;
-        [Export ("storeImageData:forKey:completion:")]
-        void StoreImageData ([NullAllowed] NSData imageData, [NullAllowed] string key, [NullAllowed] Action completionBlock);
-
-        // -(void)storeImage:(nullable UIImage *)image imageData:(nullable NSData *)imageData forKey:(nullable NSString *)key toDisk:(BOOL)toDisk completion:(nullable SDWebImageNoParamsBlock)completionBlock;
-        [Export ("storeImage:imageData:forKey:toDisk:completion:")]
-        void StoreImage ([NullAllowed] UIImage image, [NullAllowed] NSData imageData, [NullAllowed] string key, bool toDisk, [NullAllowed] Action completionBlock);
-
-        // -(void)storeImageToMemory:(nullable UIImage*)image forKey:(nullable NSString *)key;
-        [Export ("storeImageToMemory:forKey:")]
-        void StoreImageToMemory ([NullAllowed] UIImage image, [NullAllowed] string key);
-
-        // -(void)storeImageDataToDisk:(nullable NSData *)imageData forKey:(nullable NSString *)key;
-        [Export ("storeImageDataToDisk:forKey:")]
-        void StoreImageDataToDisk ([NullAllowed] NSData imageData, [NullAllowed] string key);
-
-        // -(void)diskImageExistsWithKey:(nullable NSString *)key completion:(nullable SDImageCacheCheckCompletionBlock)completionBlock;
-        [Export ("diskImageExistsWithKey:completion:")]
-        void DiskImageExistsWithKey ([NullAllowed] string key, [NullAllowed] Action<bool> completionBlock);
-
-        // -(BOOL)diskImageDataExistsWithKey:(nullable NSString *)key;
-        [Export ("diskImageDataExistsWithKey:")]
-        bool DiskImageDataExistsWithKey ([NullAllowed] string key);
-
-        // -(nullable NSData *)diskImageDataForKey:(nullable NSString *)key;
-        [Export ("diskImageDataForKey:")]
-        [return: NullAllowed]
-        NSData DiskImageDataForKey ([NullAllowed] string key);
-
-        // -(nullable SDImageCacheToken *)queryCacheOperationForKey:(nullable NSString *)key done:(nullable SDImageCacheQueryCompletionBlock)doneBlock;
-        [Export ("queryCacheOperationForKey:done:")]
-        [return: NullAllowed]
-        SDImageCacheToken QueryCacheOperationForKey ([NullAllowed] string key, [NullAllowed] Action<UIImage, NSData, SDImageCacheType> doneBlock);
-
-        // -(nullable UIImage *)imageFromMemoryCacheForKey:(nullable NSString *)key;
-        [Export ("imageFromMemoryCacheForKey:")]
-        [return: NullAllowed]
-        UIImage ImageFromMemoryCacheForKey ([NullAllowed] string key);
-
-        // -(nullable UIImage *)imageFromDiskCacheForKey:(nullable NSString *)key;
-        [Export ("imageFromDiskCacheForKey:")]
-        [return: NullAllowed]
-        UIImage ImageFromDiskCacheForKey ([NullAllowed] string key);
-
-        // -(nullable UIImage *)imageFromCacheForKey:(nullable NSString *)key;
-        [Export ("imageFromCacheForKey:")]
-        [return: NullAllowed]
-        UIImage ImageFromCacheForKey ([NullAllowed] string key);
-
-        // -(void)removeImageForKey:(nullable NSString *)key withCompletion:(nullable SDWebImageNoParamsBlock)completion;
-        [Export ("removeImageForKey:withCompletion:")]
-        void RemoveImageForKey ([NullAllowed] string key, [NullAllowed] Action completion);
-
-        // -(void)removeImageForKey:(nullable NSString *)key fromDisk:(BOOL)fromDisk withCompletion:(nullable SDWebImageNoParamsBlock)completion;
-        [Export ("removeImageForKey:fromDisk:withCompletion:")]
-        void RemoveImageForKey ([NullAllowed] string key, bool fromDisk, [NullAllowed] Action completion);
-
-        // -(void)removeImageFromMemoryForKey:(nullable NSString *)key;
-        [Export ("removeImageFromMemoryForKey:")]
-        void RemoveImageFromMemoryForKey ([NullAllowed] string key);
-
-        // -(void)removeImageFromDiskForKey:(nullable NSString *)key;
-        [Export ("removeImageFromDiskForKey:")]
-        void RemoveImageFromDiskForKey ([NullAllowed] string key);
-
-        // -(void)clearMemory;
-        [Export ("clearMemory")]
-        void ClearMemory ();
-
-        // -(void)clearDiskOnCompletion:(nullable SDWebImageNoParamsBlock)completion;
-        [Export ("clearDiskOnCompletion:")]
-        void ClearDiskOnCompletion ([NullAllowed] Action completion);
-
-        // -(void)deleteOldFilesWithCompletionBlock:(nullable SDWebImageNoParamsBlock)completionBlock;
-        [Export ("deleteOldFilesWithCompletionBlock:")]
-        void DeleteOldFilesWithCompletionBlock ([NullAllowed] Action completionBlock);
-
-        // -(NSUInteger)totalDiskSize;
-        [Export ("totalDiskSize")]
-        nuint TotalDiskSize ();
-
-        // -(NSUInteger)totalDiskCount;
-        [Export ("totalDiskCount")]
-        nuint TotalDiskCount ();
-
-        // -(void)calculateSizeWithCompletionBlock:(nullable SDImageCacheCalculateSizeBlock)completionBlock;
-        [Export ("calculateSizeWithCompletionBlock:")]
-        void CalculateSizeWithCompletionBlock ([NullAllowed] Action<nuint, nuint> completionBlock);
 	}
 }
