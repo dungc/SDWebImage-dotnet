@@ -7,7 +7,7 @@
         <IsBindingProject>true</IsBindingProject>
 
         <!-- Nuget package -->
-        <PackageId>com.pasasoft.SDWebImage</PackageId>
+        <PackageId>SDWebImage.Net.iOS</PackageId>
         <Version>5.21.0.7</Version>
         <Authors>Jack pasa</Authors>
         <Title>SDWebImage for dotnet</Title>
